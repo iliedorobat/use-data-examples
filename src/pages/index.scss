@@ -1,0 +1,27 @@
+main {
+    &.demo {
+        display: flex;
+        gap: 48px;
+        padding: 96px;
+
+        > .content {
+            h4 {
+                margin-bottom: 16px !important;
+            }
+
+            .promise-all,
+            .promise-all-settled {
+                .form-group {
+                    margin-bottom: 16px;
+                }
+            }
+        }
+
+        > .sidebar {
+            max-width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+    }
+}
