@@ -1,5 +1,6 @@
 import React, {ChangeEvent, useState} from 'react';
-import {GenericObject, prepareUrl} from '@/hooks/fetch/http.utils';
+import {ObjectType} from '@/hooks/fetch/http.types';
+import {prepareUrl} from '@/hooks/fetch/http.utils';
 import {PEOPLE_URL} from '@/shared/globals';
 
 const getEndpoints = (start: number, end: number) => {
@@ -16,7 +17,7 @@ const getEndpoints = (start: number, end: number) => {
     return endpoints;
 };
 
-export default function MultipleQueriesForm({setEndpoints}: GenericObject) {
+export default function MultipleQueriesForm({setEndpoints}: ObjectType) {
     const [min, setMin] = useState(0);
     const [max, setMax] = useState(0);
 

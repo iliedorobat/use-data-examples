@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {debug} from '@/hooks/fetch/useData';
-import {GenericObject} from '@/hooks/fetch/http.utils';
+import {ObjectType} from '@/hooks/fetch/http.types';
 import {PeopleTableModel} from '@/shared/globals';
 import {Person} from '@/pages/api/people';
 import {RESULT_TYPES} from '@/hooks/fetch/useData.types';
@@ -33,7 +33,7 @@ export default function OrdinaryPeopleTable({uri}: PeopleTableModel) {
                 </tr>
                 </thead>
                 <tbody>
-                    {data.map((item: GenericObject, index: number) => (
+                    {data.map((item: ObjectType, index: number) => (
                         <tr key={item.name}>
                             <td>{index + 1}</td>
                             <td>{item.name}</td>

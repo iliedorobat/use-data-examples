@@ -1,21 +1,23 @@
 import {useEffect, useState} from 'react';
-import {AllDataHookInput, DataHookInput, RESULT_TYPES} from '@/hooks/fetch/useData.types';
+import {AllDataInputType, DataInputType, RESULT_TYPES} from '@/hooks/fetch/useData.types';
 import {bucketFetch, mergeAllResponses, mergeAllSettledResponses} from '@/hooks/fetch/http.utils';
 import {CustomAbortedError} from '@/hooks/fetch/errors';
 
 function useData({
+    contract = fetch,
     endpoint,
     id,
     initialData = {},
-    initialLoading = true
-}: DataHookInput) {
+    initialLoading = true,
+    deps = []
+}: DataInputType) {
     const [data, setData] = useState(initialData);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(initialLoading);
 
     const abortController = new AbortController();
     const signal = abortController.signal;
-    const setExternalData = (externalData: any) => {
+    const setExternalData = (externalData: DataInputType['initialData']) => {
         abortController.abort();
         setData(externalData);
         setError(null);
@@ -25,8 +27,7 @@ function useData({
     useEffect(() => {
         setIsLoading(true);
 
-        fetch(endpoint, {signal})
-            .then(response => response.json())
+        contract(endpoint, {signal})
             .then(response => {
                 setData(response);
                 setError(null);
@@ -42,24 +43,26 @@ function useData({
         return () => {
             abortController.abort();
         }
-    }, [endpoint]);
+    }, [endpoint, ...deps]);
 
     return [data, setExternalData, isLoading, error, abortController];
 }
 
 function useAllData({
+    contract = fetch,
     endpoints,
     id,
     initialData = {},
-    initialLoading = true
-}: AllDataHookInput) {
+    initialLoading = true,
+    deps = []
+}: AllDataInputType) {
     const [data, setData] = useState(initialData);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(initialLoading);
 
     const abortController = new AbortController();
     const signal = abortController.signal;
-    const setExternalData = (externalData: any) => {
+    const setExternalData = (externalData: DataInputType['initialData']) => {
         abortController.abort();
         setData(externalData);
         setError(null);
@@ -68,7 +71,7 @@ function useAllData({
 
     useEffect(() => {
         setIsLoading(true);
-        const promises = bucketFetch(endpoints, {signal});
+        const promises = bucketFetch(contract, endpoints, {signal});
 
         Promise.all(promises)
             .then(responses => {
@@ -87,24 +90,26 @@ function useAllData({
         return () => {
             abortController.abort();
         }
-    }, [endpoints]);
+    }, [endpoints, ...deps]);
 
     return [data, setExternalData, isLoading, error, abortController];
 }
 
 function useAllSettledData({
+    contract = fetch,
     endpoints,
     id,
     initialData = {},
-    initialLoading = true
-}: AllDataHookInput) {
+    initialLoading = true,
+    deps = []
+}: AllDataInputType) {
     const [data, setData] = useState(initialData);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(initialLoading);
 
     const abortController = new AbortController();
     const signal = abortController.signal;
-    const setExternalData = (externalData: any) => {
+    const setExternalData = (externalData: DataInputType['initialData']) => {
         abortController.abort();
         setData(externalData);
         setError(null);
@@ -113,7 +118,7 @@ function useAllSettledData({
 
     useEffect(() => {
         setIsLoading(true);
-        const promises = bucketFetch(endpoints, {signal});
+        const promises = bucketFetch(contract, endpoints, {signal});
 
         Promise.allSettled(promises)
             .then(responses => {
@@ -136,7 +141,7 @@ function useAllSettledData({
         return () => {
             abortController.abort();
         }
-    }, [endpoints]);
+    }, [endpoints, ...deps]);
 
     return [data, setExternalData, isLoading, error, abortController];
 }

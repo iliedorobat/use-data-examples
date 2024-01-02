@@ -1,5 +1,5 @@
 import React from 'react';
-import {GenericObject} from '@/hooks/fetch/http.utils';
+import {ObjectType} from '@/hooks/fetch/http.types';
 import {PeopleTableModel} from '@/shared/globals';
 import {useFlaggedData} from '@/hooks/fetch/useFlaggedData';
 
@@ -25,7 +25,7 @@ export default function FlagControllerPeopleTable({uri}: PeopleTableModel) {
                 </tr>
                 </thead>
                 <tbody>
-                    {data.results.map((item: GenericObject, index: number) => (
+                    {data.results.map((item: ObjectType, index: number) => (
                         <tr key={item.name}>
                             <td>{index + 1}</td>
                             <td>{item.name}</td>

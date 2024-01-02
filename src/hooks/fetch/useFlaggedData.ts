@@ -1,13 +1,15 @@
 import {useEffect, useState} from 'react';
-import {DataHookInput, RESULT_TYPES} from '@/hooks/fetch/useData.types';
+import {DataInputType, RESULT_TYPES} from '@/hooks/fetch/useData.types';
 import {logError} from '@/hooks/fetch/useData';
 
 function useFlaggedData({
-    endpoint = '',
+    contract = fetch,
+    endpoint,
     id,
     initialData = {},
-    initialLoading = true
-}: DataHookInput) {
+    initialLoading = true,
+    deps = []
+}: DataInputType) {
     const [data, setData] = useState(initialData);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(initialLoading);
@@ -23,7 +25,7 @@ function useFlaggedData({
     useEffect(() => {
         setIsLoading(true);
 
-        fetch(endpoint)
+        contract(endpoint)
             .then(response => response.json())
             .then(response => {
                 if (active) {
@@ -44,7 +46,7 @@ function useFlaggedData({
         return () => {
             active = false;
         }
-    }, [endpoint]);
+    }, [endpoint, ...deps]);
 
     return [data, setExternalData, isLoading, error];
 }

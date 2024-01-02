@@ -1,28 +1,21 @@
-type Params = { [key: string]: any; }
-
-export type GenericObject = { [key: string]: any; }
-
-/**
- * Create a URL based on the specified endpoint and its parameters.
- * @param endpoint - Target remote address.
- * @param params - Optional query parameters.
- */
-function prepareUrl(endpoint: string, params: Params = {}) {
-    const url = new URL(endpoint);
-    url.search = new URLSearchParams(params).toString();
-    return url.toString();
-}
+import {HttpParamsType, ObjectType} from '@/hooks/fetch/http.types';
+import {ContractType} from '@/hooks/fetch/useData.types';
 
 /**
  * Fetch a list of URLs.
- * @param urls - List of URLs called.
+ * @param contract - Custom contract.
+ *      E.g.: (uri: string, options?: object) => fetch(uri, options).then(response => response.json());
+ * @param endpoints - Lis of target remote addresses.
  * @param abortController - AbortController instance.
  */
-function bucketFetch(urls: Array<string> = [], abortController: RequestInit) {
-    return urls.map(
-        url => fetch(url, abortController)
-            .then(response => response.json())
-    );
+function bucketFetch(
+    contract: ContractType,
+    endpoints: Array<string> = [],
+    abortController: RequestInit
+) {
+    const signal = abortController?.signal || undefined;
+
+    return endpoints.map(endpoint => contract(endpoint, {signal}));
 }
 
 /**
@@ -31,7 +24,7 @@ function bucketFetch(urls: Array<string> = [], abortController: RequestInit) {
  * @param urls - List of URLs called.
  * @param responses - List of responses received.
  */
-function mergeAllResponses(urls: Array<string> = [], responses: Array<GenericObject>) {
+function mergeAllResponses(urls: Array<string> = [], responses: Array<ObjectType>) {
     return responses.reduce((acc, item, index) => {
         const key = urls[index];
         acc[key] = item;
@@ -46,7 +39,7 @@ function mergeAllResponses(urls: Array<string> = [], responses: Array<GenericObj
  * @param urls - List of URLs called.
  * @param responses - List of responses received.
  */
-function mergeAllSettledResponses(urls: Array<string> = [], responses: Array<GenericObject>) {
+function mergeAllSettledResponses(urls: Array<string> = [], responses: Array<ObjectType>) {
     return responses.reduce((acc, item, index) => {
         const key = urls[index];
         acc[key] = item.status === 'fulfilled'
@@ -55,6 +48,17 @@ function mergeAllSettledResponses(urls: Array<string> = [], responses: Array<Gen
 
         return acc;
     }, {});
+}
+
+/**
+ * Create a URL based on the specified endpoint and its parameters.
+ * @param endpoint - Target remote address.
+ * @param params - Optional query parameters.
+ */
+function prepareUrl(endpoint: string, params: HttpParamsType = {}) {
+    const url = new URL(endpoint);
+    url.search = new URLSearchParams(params).toString();
+    return url.toString();
 }
 
 export {
