@@ -5,21 +5,21 @@ import {prepareUrl} from '@/hooks/fetch/http.utils';
 import {PEOPLE_URL} from '@/shared/globals';
 
 export default function AbortControllerFetching() {
-    const [uri, setUri] = useState(PEOPLE_URL);
+    const [endpoint, setEndpoint] = useState(PEOPLE_URL);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newUri = prepareUrl(PEOPLE_URL, {
             name: e.target.value,
             delay: Math.random() * 1000
         });
-        setUri(newUri);
+        setEndpoint(newUri);
     };
 
     return (
         <div className="abort-controller-racing">
             <h4>Abort Controller Fetching</h4>
             <FilterBar handleInputChange={handleInputChange} />
-            <AbortControllerPeopleTable uri={uri} />
+            <AbortControllerPeopleTable endpoint={endpoint} />
         </div>
     );
 }

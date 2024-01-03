@@ -3,9 +3,9 @@ import {ObjectType} from '@/hooks/fetch/http.types';
 import {PeopleTableModel} from '@/shared/globals';
 import {useFlaggedData} from '@/hooks/fetch/useFlaggedData';
 
-export default function FlagControllerPeopleTable({uri}: PeopleTableModel) {
+export default function FlagControllerPeopleTable({endpoint}: PeopleTableModel) {
     const [data, setData, isLoading] = useFlaggedData({
-        endpoint: uri,
+        endpoint,
         id: 'Flag Fetching',
         initialData: {
             count: 0,

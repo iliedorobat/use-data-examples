@@ -5,10 +5,10 @@ import {useData} from '@/hooks/fetch/useData';
 
 const contract = (uri: string, options?: object) => fetch(uri, options).then(response => response.json());
 
-export default function AbortControllerPeopleTable({uri}: PeopleTableModel) {
+export default function AbortControllerPeopleTable({endpoint}: PeopleTableModel) {
     const [data, setData, isLoading] = useData({
         contract,
-        endpoint: uri,
+        endpoint,
         id: 'Aborted Fetching',
         initialData: {
             count: 0,

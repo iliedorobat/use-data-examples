@@ -5,21 +5,21 @@ import {PeopleTableModel} from '@/shared/globals';
 import {Person} from '@/pages/api/people';
 import {RESULT_TYPES} from '@/hooks/fetch/useData.types';
 
-export default function OrdinaryPeopleTable({uri}: PeopleTableModel) {
+export default function OrdinaryPeopleTable({endpoint}: PeopleTableModel) {
     const [people, setPeople] = useState({} as Person);
     const data = people.results || [];
 
     useEffect(() => {
-        debug(uri, 'Ordinary Fetching', RESULT_TYPES.SUCCESS);
+        debug(endpoint, 'Ordinary Fetching', RESULT_TYPES.SUCCESS);
 
         setTimeout(() => {
-            fetch(uri)
+            fetch(endpoint)
                 .then(resp => resp.json())
                 .then(resp => {
                     setPeople(resp);
                 });
         }, Math.random() * 1000);
-    }, [uri]);
+    }, [endpoint]);
 
     return (
         <div className="table-wrapper">
