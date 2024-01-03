@@ -15,7 +15,7 @@ function useFlaggedData({
     const [isLoading, setIsLoading] = useState(initialLoading);
 
     let active = true;
-    const setExternalData = (externalData: any) => {
+    const setExternalData = (externalData: DataInputType['initialData']) => {
         active = false;
         setData(externalData);
         setError(null);
