@@ -1,21 +1,24 @@
 import {useEffect, useState} from 'react';
-import {DataInputType, RESULT_TYPES} from '@/hooks/fetch/useData.types';
+
+import {DataArgs, RESULT_TYPES} from '@/hooks/fetch/useData.types';
+import {getPromise, prepareUrl} from '@/hooks/fetch/http.utils';
 import {logError} from '@/hooks/fetch/useData';
 
 function useFlaggedData({
-    contract = fetch,
+    contract,
+    debugId,
+    deps = [],
     endpoint,
-    id,
+    endpointParams,
     initialData = {},
-    initialLoading = true,
-    deps = []
-}: DataInputType) {
+    initialLoading = true
+}: DataArgs) {
     const [data, setData] = useState(initialData);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(initialLoading);
 
     let active = true;
-    const setExternalData = (externalData: DataInputType['initialData']) => {
+    const setExternalData = (externalData: DataArgs['initialData']) => {
         active = false;
         setData(externalData);
         setError(null);
@@ -24,39 +27,44 @@ function useFlaggedData({
 
     useEffect(() => {
         setIsLoading(true);
+        const promise = getPromise({
+            contract,
+            endpoint,
+            endpointParams
+        });
 
-        contract(endpoint)
+        promise
             .then(response => response.json())
             .then(response => {
                 if (active) {
-                    debug(endpoint, id, RESULT_TYPES.SUCCESS);
+                    debug(prepareUrl(endpoint, endpointParams), debugId, RESULT_TYPES.SUCCESS);
                     setData(response);
                     setError(null);
                 } else {
-                    debug(endpoint, id, RESULT_TYPES.ERROR);
+                    debug(prepareUrl(endpoint, endpointParams), debugId, RESULT_TYPES.ERROR);
                 }
             })
             .catch(err => {
                 logError(err);
                 setError(err);
-                debug(endpoint, id, RESULT_TYPES.ERROR);
+                debug(prepareUrl(endpoint, endpointParams), debugId, RESULT_TYPES.ERROR);
             })
             .finally(() => setIsLoading(false));
 
         return () => {
             active = false;
         }
-    }, [endpoint, ...deps]);
+    }, [endpoint, endpointParams, ...deps]);
 
     return [data, setExternalData, isLoading, error];
 }
 
-function debug(endpoint: string, id: string | undefined, type: string) {
-    if (id) {
+function debug(uri: string, debugId: string | undefined, type: string) {
+    if (debugId) {
         if (type === RESULT_TYPES.ERROR) {
-            console.info(`%cDEBUG MESSAGE:\nIGNORED CALL: ${id}\n${endpoint}`, 'background: #FED8B1');
+            console.info(`%cDEBUG MESSAGE:\nIGNORED CALL: ${debugId}\n${uri}`, 'background: #FED8B1');
         } else if (type === RESULT_TYPES.SUCCESS) {
-            console.info(`%cDEBUG MESSAGE:\nSUCCESSFULLY FETCHED: ${id}\n${endpoint}`, 'background: #E0FFFF');
+            console.info(`%cDEBUG MESSAGE:\nSUCCESSFULLY FETCHED: ${debugId}\n${uri}`, 'background: #E0FFFF');
         }
     }
 }

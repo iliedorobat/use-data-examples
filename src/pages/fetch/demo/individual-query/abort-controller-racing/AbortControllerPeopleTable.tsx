@@ -1,15 +1,28 @@
 import React from 'react';
-import {ObjectType} from '@/hooks/fetch/http.types';
-import {PeopleTableModel} from '@/shared/globals';
+
+import {ContractArgs} from '@/hooks/fetch/http.types';
+import {GenericObject} from '@/hooks/fetch/http.types';
+import {PeopleTableProps} from '@/shared/tables.types';
+import {prepareUrl} from '@/hooks/fetch/http.utils';
 import {useData} from '@/hooks/fetch/useData';
 
-const contract = (uri: string, options?: object) => fetch(uri, options).then(response => response.json());
+const contract = ({endpoint, endpointParams, options}: ContractArgs) => {
+    if (endpoint) {
+        const url = prepareUrl(endpoint, endpointParams);
+        return fetch(url, options).then(response => response.json());
+    }
 
-export default function AbortControllerPeopleTable({endpoint}: PeopleTableModel) {
+    return new Promise((resolve, reject) => {
+        reject('The contract/endpoint in not valid!');
+    });
+};
+
+export default function AbortControllerPeopleTable({endpoint, endpointParams}: PeopleTableProps) {
     const [data, setData, isLoading] = useData({
         contract,
         endpoint,
-        id: 'Aborted Fetching',
+        endpointParams,
+        debugId: 'Aborted Fetching',
         initialData: {
             count: 0,
             results: []
@@ -28,7 +41,7 @@ export default function AbortControllerPeopleTable({endpoint}: PeopleTableModel)
                 </tr>
                 </thead>
                 <tbody>
-                    {data.results.map((item: ObjectType, index: number) => (
+                    {data.results.map((item: GenericObject, index: number) => (
                         <tr key={item.name}>
                             <td>{index + 1}</td>
                             <td>{item.name}</td>

@@ -1,5 +1,3 @@
-export const PEOPLE_URL = 'http://localhost:3000/api/people';
+export const PORT = 3000;
 
-export type PeopleTableModel = {
-    endpoint: string;
-}
+export const PEOPLE_URL = `http://localhost:${PORT}/api/people`;

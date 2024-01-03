@@ -1,19 +1,12 @@
 import React, {useState} from 'react';
-import AbortControllerFetching from '@/pages/fetch/demo/individual-query/abort-controller-racing/AbortControllerFetching';
+
+import AbortControllerFetching
+    from '@/pages/fetch/demo/individual-query/abort-controller-racing/AbortControllerFetching';
 import FlagControllerFetching from '@/pages/fetch/demo/individual-query/flag-controller-racing/FlagControllerFetching';
+import {ModesType, ModeType} from '@/pages/index.types';
 import OrdinaryFetching from '@/pages/fetch/demo/individual-query/ordnary-racing/OrdinaryFetching';
 import PromiseAll from '@/pages/fetch/demo/multiple-queries/PromiseAll';
 import PromiseAllSettled from '@/pages/fetch/demo/multiple-queries/PromiseAllSettled';
-
-type ModeType = {
-    LABEL: string,
-    NAME: string,
-    ORDER: number,
-};
-
-type ModesType = {
-    [key: string]: ModeType
-};
 
 const MODES = {
     ABORT_CONTROLLER_FETCHING: {

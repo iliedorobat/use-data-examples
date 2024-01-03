@@ -1,19 +1,21 @@
-export type ContractType = (uri: string, options?: RequestInit) => Promise<any>;
+import {Contract} from '@/hooks/fetch/http.types';
 
-export type DataInputType = {
-    contract?: ContractType,
+export type DataArgs = {
+    contract?: Contract,
     deps?: Array<any>;
     endpoint: string;
-    id?: string;
+    endpointParams?: object;
+    debugId?: string;
     initialData?: any;
     initialLoading?: boolean;
 };
 
-export type AllDataInputType = {
-    contract?: ContractType,
+export type AllDataArgs = {
+    contract?: Contract,
     deps?: Array<any>;
     endpoints: Array<string>;
-    id?: string;
+    endpointsParams?: Array<object>;
+    debugId?: string;
     initialData?: any;
     initialLoading?: boolean;
 };

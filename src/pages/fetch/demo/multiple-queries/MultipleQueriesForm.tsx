@@ -1,5 +1,6 @@
 import React, {ChangeEvent, useState} from 'react';
-import {ObjectType} from '@/hooks/fetch/http.types';
+
+import {GenericObject} from '@/hooks/fetch/http.types';
 import {prepareUrl} from '@/hooks/fetch/http.utils';
 import {PEOPLE_URL} from '@/shared/globals';
 
@@ -8,8 +9,7 @@ const getEndpoints = (start: number, end: number) => {
 
     for (let i = start; i < end; i++) {
         const url = prepareUrl(PEOPLE_URL, {
-            url: `https://swapi.dev/api/people/${i}/`,
-            delay: Math.random() * 1000
+            url: `https://swapi.dev/api/people/${i}/`
         });
         endpoints.push(url);
     }
@@ -17,13 +17,16 @@ const getEndpoints = (start: number, end: number) => {
     return endpoints;
 };
 
-export default function MultipleQueriesForm({setEndpoints}: ObjectType) {
+export default function MultipleQueriesForm({setEndpoints, setEndpointsParams}: GenericObject) {
     const [min, setMin] = useState(0);
     const [max, setMax] = useState(0);
 
     const updateEndpoints = () => {
         const urls = getEndpoints(min, max);
         setEndpoints(urls);
+        setEndpointsParams(urls.map(url => ({
+            delay: Math.random() * 1000
+        })));
     };
 
     const handleMinChange = (e: ChangeEvent<HTMLInputElement>) => {

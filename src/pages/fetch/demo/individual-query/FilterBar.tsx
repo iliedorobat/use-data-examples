@@ -1,10 +1,10 @@
 import React, {ChangeEventHandler} from 'react';
 
-export type FilterBarModel = {
+export type FilterBarProps = {
     handleInputChange: ChangeEventHandler;
 };
 
-export default function FilterBar({handleInputChange}: FilterBarModel) {
+export default function FilterBar({handleInputChange}: FilterBarProps) {
     return (
         <form className="mb-4">
             <div className="form-group row">

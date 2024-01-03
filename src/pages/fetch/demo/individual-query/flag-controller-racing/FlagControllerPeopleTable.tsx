@@ -1,12 +1,13 @@
 import React from 'react';
-import {ObjectType} from '@/hooks/fetch/http.types';
-import {PeopleTableModel} from '@/shared/globals';
+import {GenericObject} from '@/hooks/fetch/http.types';
+import {PeopleTableProps} from '@/shared/tables.types';
 import {useFlaggedData} from '@/hooks/fetch/useFlaggedData';
 
-export default function FlagControllerPeopleTable({endpoint}: PeopleTableModel) {
+export default function FlagControllerPeopleTable({endpoint, endpointParams}: PeopleTableProps) {
     const [data, setData, isLoading] = useFlaggedData({
         endpoint,
-        id: 'Flag Fetching',
+        endpointParams,
+        debugId: 'Flag Fetching',
         initialData: {
             count: 0,
             results: []
@@ -25,7 +26,7 @@ export default function FlagControllerPeopleTable({endpoint}: PeopleTableModel) 
                 </tr>
                 </thead>
                 <tbody>
-                    {data.results.map((item: ObjectType, index: number) => (
+                    {data.results.map((item: GenericObject, index: number) => (
                         <tr key={item.name}>
                             <td>{index + 1}</td>
                             <td>{item.name}</td>

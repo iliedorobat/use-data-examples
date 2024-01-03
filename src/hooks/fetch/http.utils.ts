@@ -1,30 +1,60 @@
-import {HttpParamsType, ObjectType} from '@/hooks/fetch/http.types';
-import {ContractType} from '@/hooks/fetch/useData.types';
+import {Contract, HttpParams, HttpPromiseArgs, GenericObject} from '@/hooks/fetch/http.types';
 
 /**
- * Fetch a list of URLs.
- * @param contract - Custom contract.
+ * Fetch a resource from the network.
+ *
+ * @param contract - Custom API contract.
+ *      E.g.: (uri: string, options?: object) => fetch(uri, options).then(response => response.json());
+ * @param endpoint - Target remote addresses.
+ * @param endpointParams - Optional query parameters.
+ * @param options - Custom settings applied to the request.
+ */
+function getPromise({contract, endpoint, endpointParams, options}: HttpPromiseArgs) {
+    if (contract) {
+        return contract({endpoint, endpointParams, options});
+    }
+
+    if (endpoint) {
+        const url = prepareUrl(endpoint, endpointParams);
+        return fetch(url, options);
+    }
+
+    return new Promise((resolve, reject) => {
+        reject('The contract/endpoint in not valid!');
+    });
+}
+
+/**
+ * Fetch a list of resources from the network.
+ *
+ * @param contract - Custom API contract.
  *      E.g.: (uri: string, options?: object) => fetch(uri, options).then(response => response.json());
  * @param endpoints - Lis of target remote addresses.
- * @param abortController - AbortController instance.
+ * @param endpointsParams - List of objects containing optional query parameters.
+ * @param options - Custom settings applied to the request.
  */
 function bucketFetch(
-    contract: ContractType,
+    contract: Contract | undefined,
     endpoints: Array<string> = [],
-    abortController: RequestInit
+    endpointsParams: Array<HttpParams> = [],
+    options: RequestInit
 ) {
-    const signal = abortController?.signal || undefined;
-
-    return endpoints.map(endpoint => contract(endpoint, {signal}));
+    return endpoints.map((endpoint, index) => getPromise({
+        contract,
+        endpoint,
+        endpointParams: endpointsParams[index],
+        options
+    }));
 }
 
 /**
  * Reduce the list of responses to an object having queried URLs
  * as keys and their responses as values.
+ *
  * @param urls - List of URLs called.
  * @param responses - List of responses received.
  */
-function mergeAllResponses(urls: Array<string> = [], responses: Array<ObjectType>) {
+function mergeAllResponses(urls: Array<string> = [], responses: Array<GenericObject>) {
     return responses.reduce((acc, item, index) => {
         const key = urls[index];
         acc[key] = item;
@@ -34,12 +64,13 @@ function mergeAllResponses(urls: Array<string> = [], responses: Array<ObjectType
 }
 
 /**
- * Reduce the list of responses to an object having queried URLs
+ * Reduce the list of settled responses to an object having queried URLs
  * as keys and their responses as values.
+ *
  * @param urls - List of URLs called.
  * @param responses - List of responses received.
  */
-function mergeAllSettledResponses(urls: Array<string> = [], responses: Array<ObjectType>) {
+function mergeAllSettledResponses(urls: Array<string> = [], responses: Array<GenericObject>) {
     return responses.reduce((acc, item, index) => {
         const key = urls[index];
         acc[key] = item.status === 'fulfilled'
@@ -51,19 +82,32 @@ function mergeAllSettledResponses(urls: Array<string> = [], responses: Array<Obj
 }
 
 /**
- * Create a URL based on the specified endpoint and its parameters.
+ * Build a URL based on a specified endpoint and its parameters.
+ *
  * @param endpoint - Target remote address.
- * @param params - Optional query parameters.
+ * @param endpointParams - Optional query parameters.
  */
-function prepareUrl(endpoint: string, params: HttpParamsType = {}) {
+function prepareUrl(endpoint: string, endpointParams: HttpParams = {}) {
     const url = new URL(endpoint);
-    url.search = new URLSearchParams(params).toString();
+    url.search = new URLSearchParams(endpointParams).toString();
     return url.toString();
+}
+
+/**
+ * Build a list of URLs based on each specified endpoint and its parameters.
+ *
+ * @param endpoints - List of target remote addresses.
+ * @param endpointsParams - Optional list of query parameters.
+ */
+function prepareUrls(endpoints: Array<string> = [], endpointsParams: Array<HttpParams> = []) {
+    return endpoints.map((endpoint, index) => prepareUrl(endpoint, endpointsParams[index]));
 }
 
 export {
     bucketFetch,
+    getPromise,
     mergeAllResponses,
     mergeAllSettledResponses,
-    prepareUrl
+    prepareUrl,
+    prepareUrls
 };
