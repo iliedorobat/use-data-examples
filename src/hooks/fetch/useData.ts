@@ -11,18 +11,27 @@ import {
 } from '@/hooks/fetch/http.utils';
 import {CustomAbortedError} from '@/hooks/fetch/errors';
 
+/**
+ * Read the value of a Promise.
+ *
+ * @param contract - Promise used to fetch data. If not present, the <b>fetch</b> API is used instead.
+ * @param debugId - Instance identifier used to log a debug message. If not present, no message will be display.
+ * @param deps - List of optional dependencies used to trigger a new fetch.
+ * @param endpoint - Target remote address.
+ * @param endpointParams - Query parameters.
+ * @param initialData - Initial state.
+ */
 function useData({
     contract,
     debugId,
     deps = [],
     endpoint,
     endpointParams,
-    initialData = {},
-    initialLoading = true
+    initialData = {}
 }: DataArgs) {
     const [data, setData] = useState(initialData);
     const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(initialLoading);
+    const [isLoading, setIsLoading] = useState(true);
 
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -63,18 +72,27 @@ function useData({
     return [data, setExternalData, isLoading, error, abortController];
 }
 
+/**
+ * Read multiple values of a list of Promises using <b>Promise.all</b> method.
+ *
+ * @param contract - Promise used to fetch data. If not present, the <b>fetch</b> API is used instead.
+ * @param debugId - Instance identifier used to log a debug message. If not present, no message will be display.
+ * @param deps - List of optional dependencies used to trigger a new fetch.
+ * @param endpoint - Target remote address.
+ * @param endpointsParams - Query parameters.
+ * @param initialData - Initial state.
+ */
 function useAllData({
     contract,
     debugId,
     deps = [],
     endpoints,
     endpointsParams = [],
-    initialData = {},
-    initialLoading = true
+    initialData = {}
 }: AllDataArgs) {
     const [data, setData] = useState(initialData);
     const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(initialLoading);
+    const [isLoading, setIsLoading] = useState(true);
 
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -111,18 +129,27 @@ function useAllData({
     return [data, setExternalData, isLoading, error, abortController];
 }
 
+/**
+ * Read multiple values of a list of Promises using <b>Promise.allSettled</b> method.
+ *
+ * @param contract - Promise used to fetch data. If not present, the <b>fetch</b> API is used instead.
+ * @param debugId - Instance identifier used to log a debug message. If not present, no message will be display.
+ * @param deps - List of optional dependencies used to trigger a new fetch.
+ * @param endpoint - Target remote address.
+ * @param endpointsParams - Query parameters.
+ * @param initialData - Initial state.
+ */
 function useAllSettledData({
     contract,
     debugId,
     deps = [],
     endpoints,
     endpointsParams = [],
-    initialData = {},
-    initialLoading = true
+    initialData = {}
 }: AllDataArgs) {
     const [data, setData] = useState(initialData);
     const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(initialLoading);
+    const [isLoading, setIsLoading] = useState(true);
 
     const abortController = new AbortController();
     const signal = abortController.signal;

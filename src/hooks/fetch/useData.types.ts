@@ -7,7 +7,6 @@ export type DataArgs = {
     endpointParams?: object;
     debugId?: string;
     initialData?: any;
-    initialLoading?: boolean;
 };
 
 export type AllDataArgs = {
@@ -17,7 +16,6 @@ export type AllDataArgs = {
     endpointsParams?: Array<object>;
     debugId?: string;
     initialData?: any;
-    initialLoading?: boolean;
 };
 
 export enum RESULT_TYPES {

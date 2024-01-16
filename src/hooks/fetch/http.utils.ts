@@ -5,7 +5,7 @@ import {Contract, HttpParams, HttpPromiseArgs, GenericObject} from '@/hooks/fetc
  *
  * @param contract - Custom API contract.
  *      E.g.: (uri: string, options?: object) => fetch(uri, options).then(response => response.json());
- * @param endpoint - Target remote addresses.
+ * @param endpoint - Target remote address.
  * @param endpointParams - Optional query parameters.
  * @param options - Custom settings applied to the request.
  */
@@ -97,7 +97,7 @@ function prepareUrl(endpoint: string, endpointParams: HttpParams = {}) {
  * Build a list of URLs based on each specified endpoint and its parameters.
  *
  * @param endpoints - List of target remote addresses.
- * @param endpointsParams - Optional list of query parameters.
+ * @param endpointsParams - List of query parameters.
  */
 function prepareUrls(endpoints: Array<string> = [], endpointsParams: Array<HttpParams> = []) {
     return endpoints.map((endpoint, index) => prepareUrl(endpoint, endpointsParams[index]));
