@@ -33,7 +33,6 @@ function useFlaggedData({
         });
 
         promise
-            .then(response => response.json())
             .then(response => {
                 if (active) {
                     debug(prepareUrl(endpoint, endpointParams), debugId, RESULT_TYPES.SUCCESS);

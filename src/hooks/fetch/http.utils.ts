@@ -16,7 +16,8 @@ function getPromise({contract, endpoint, endpointParams, options}: HttpPromiseAr
 
     if (endpoint) {
         const url = prepareUrl(endpoint, endpointParams);
-        return fetch(url, options);
+        return fetch(url, options)
+            .then(response => response.json());
     }
 
     return new Promise((resolve, reject) => {
