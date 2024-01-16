@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 
 import {DataArgs, RESULT_TYPES} from '@/hooks/fetch/useData.types';
 import {getPromise, prepareUrl} from '@/hooks/fetch/http.utils';
-import {logError} from '@/hooks/fetch/useData';
+import {debug, logError} from '@/hooks/fetch/useData';
 
 function useFlaggedData({
     contract,
@@ -10,12 +10,11 @@ function useFlaggedData({
     deps = [],
     endpoint,
     endpointParams,
-    initialData = {},
-    initialLoading = true
+    initialData = {}
 }: DataArgs) {
     const [data, setData] = useState(initialData);
     const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(initialLoading);
+    const [isLoading, setIsLoading] = useState(true);
 
     let active = true;
     const setExternalData = (externalData: DataArgs['initialData']) => {
@@ -57,16 +56,6 @@ function useFlaggedData({
     }, [endpoint, endpointParams, ...deps]);
 
     return [data, setExternalData, isLoading, error];
-}
-
-function debug(uri: string, debugId: string | undefined, type: string) {
-    if (debugId) {
-        if (type === RESULT_TYPES.ERROR) {
-            console.info(`%cDEBUG MESSAGE:\nIGNORED CALL: ${debugId}\n${uri}`, 'background: #FED8B1');
-        } else if (type === RESULT_TYPES.SUCCESS) {
-            console.info(`%cDEBUG MESSAGE:\nSUCCESSFULLY FETCHED: ${debugId}\n${uri}`, 'background: #E0FFFF');
-        }
-    }
 }
 
 export {
