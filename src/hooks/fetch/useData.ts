@@ -67,7 +67,7 @@ function useData({
         return () => {
             abortController.abort();
         };
-    }, [endpoint, endpointParams, ...deps]);
+    }, [contract, debugId, endpoint, endpointParams, ...deps]);
 
     return [data, setExternalData, isLoading, error, abortController];
 }
@@ -124,7 +124,7 @@ function useAllData({
         return () => {
             abortController.abort();
         };
-    }, [endpoints.join(), endpointsParams, ...deps]);
+    }, [contract, debugId, endpoints.join(), endpointsParams, ...deps]);
 
     return [data, setExternalData, isLoading, error, abortController];
 }
@@ -170,7 +170,7 @@ function useAllSettledData({
                 setData(newData);
                 setError(null);
 
-                if (responses.some(response => response.status === 'rejected')) {
+                if (responses?.some(response => response.status === 'rejected')) {
                     throw new CustomAbortedError();
                 }
                 debug(prepareUrls(endpoints, endpointsParams).join('\n'), debugId, RESULT_TYPES.SUCCESS);
@@ -185,7 +185,7 @@ function useAllSettledData({
         return () => {
             abortController.abort();
         };
-    }, [endpoints.join(), endpointsParams, ...deps]);
+    }, [contract, debugId, endpoints.join(), endpointsParams, ...deps]);
 
     return [data, setExternalData, isLoading, error, abortController];
 }
@@ -213,4 +213,4 @@ export {
     useData,
     useAllData,
     useAllSettledData
-}
+};
