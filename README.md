@@ -1,5 +1,24 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Short description:
+When you make an API call for getting data for a table (I will refer to this call as query_1) but switch very fast to the second page (I will refer to this call as query_2) there are 3 different behaviors:
+- query_1 finishes before switching to the second page and calling query_2. **[Normal behavior]**
+- query_1 ends after the user navigates to the second page. In this case, stale data will be displayed until query_2 completes. **[BUG]**
+- query_1 takes too long and query_2 has finished. In this case, even if query_2 has finished and the table is displaying correct data, the table will be updated with stale data as soon as query_1 finishes. **[Annoying BUG]**
+
+## Implementation:
+- useData: for querying a single API.
+- useAllData: for querying multiple APIs - uses Promise.all for handling the responses.
+- useAllSettledData: for querying multiple APIs: uses Promise.allSettled for handling the responses.
+
+## Test cases:
+There are 5 options in the sidebar:
+- Ordinary Fetching: usual fetch which can cause the bug.
+- Flag Controller Fetching: an alternative to abort controller approach. The difference is that the API calls will not be canceled but stale data is not displayed either.
+- Abort Controller Fetching: the implementation I have mentioned.
+- Promise All: the implementation of abort controller for multiple API calls.
+- Promise All Settled: the implementation of abort controller for multiple API calls.
+
 ## Getting Started
 
 First, run the development server:

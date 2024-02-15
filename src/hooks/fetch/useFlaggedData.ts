@@ -51,7 +51,7 @@ function useFlaggedData({
 
         return () => {
             active = false;
-        }
+        };
     }, [endpoint, endpointParams, ...deps]);
 
     return [data, setExternalData, isLoading, error];
