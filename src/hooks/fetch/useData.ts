@@ -34,7 +34,7 @@ function useData({
     const [isLoading, setIsLoading] = useState(true);
 
     const abortController = new AbortController();
-    const signal = abortController.signal;
+    const {signal} = abortController;
     const setExternalData = (externalData: DataArgs['initialData']) => {
         abortController.abort();
         setData(externalData);
@@ -66,7 +66,7 @@ function useData({
 
         return () => {
             abortController.abort();
-        }
+        };
     }, [endpoint, endpointParams, ...deps]);
 
     return [data, setExternalData, isLoading, error, abortController];
@@ -95,7 +95,7 @@ function useAllData({
     const [isLoading, setIsLoading] = useState(true);
 
     const abortController = new AbortController();
-    const signal = abortController.signal;
+    const {signal} = abortController;
     const setExternalData = (externalData: AllDataArgs['initialData']) => {
         abortController.abort();
         setData(externalData);
@@ -123,7 +123,7 @@ function useAllData({
 
         return () => {
             abortController.abort();
-        }
+        };
     }, [endpoints.join(), endpointsParams, ...deps]);
 
     return [data, setExternalData, isLoading, error, abortController];
@@ -152,7 +152,7 @@ function useAllSettledData({
     const [isLoading, setIsLoading] = useState(true);
 
     const abortController = new AbortController();
-    const signal = abortController.signal;
+    const {signal} = abortController;
     const setExternalData = (externalData: AllDataArgs['initialData']) => {
         abortController.abort();
         setData(externalData);
@@ -184,7 +184,7 @@ function useAllSettledData({
 
         return () => {
             abortController.abort();
-        }
+        };
     }, [endpoints.join(), endpointsParams, ...deps]);
 
     return [data, setExternalData, isLoading, error, abortController];
