@@ -124,7 +124,7 @@ function useAllData({
         return () => {
             abortController.abort();
         }
-    }, [endpoints, endpointsParams, ...deps]);
+    }, [endpoints.join(), endpointsParams, ...deps]);
 
     return [data, setExternalData, isLoading, error, abortController];
 }
@@ -185,7 +185,7 @@ function useAllSettledData({
         return () => {
             abortController.abort();
         }
-    }, [endpoints, endpointsParams, ...deps]);
+    }, [endpoints.join(), endpointsParams, ...deps]);
 
     return [data, setExternalData, isLoading, error, abortController];
 }
