@@ -22,14 +22,14 @@ There are 5 options in the sidebar:
 **Example 1: basic usage**
 ```javascript
 const [data, setData, isLoading] = useData({
-        endpoint,
-        endpointParams,
-        debugId: 'Flag Fetching',
-        initialData: {
-            count: 0,
-            results: []
-        }
-    });
+    endpoint,
+    endpointParams,
+    debugId: 'Flag Fetching',
+    initialData: {
+        count: 0,
+        results: []
+    }
+});
 ```
 
 **Example 2: using a `contract`**
@@ -46,15 +46,15 @@ const contract = ({endpoint, endpointParams, options}: ContractArgs) => {
 };
 
 const [data, setData, isLoading] = useData({
-        contract,
-        endpoint,
-        endpointParams,
-        debugId: 'Aborted Fetching',
-        initialData: {
-            count: 0,
-            results: []
-        }
-    });
+    contract,
+    endpoint,
+    endpointParams,
+    debugId: 'Aborted Fetching',
+    initialData: {
+        count: 0,
+        results: []
+    }
+});
 ```
 
 ## Getting Started
