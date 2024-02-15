@@ -19,6 +19,44 @@ There are 5 options in the sidebar:
 - Promise All: the implementation of abort controller for multiple API calls.
 - Promise All Settled: the implementation of abort controller for multiple API calls.
 
+**Example 1: basic usage**
+```javascript
+const [data, setData, isLoading] = useData({
+        endpoint,
+        endpointParams,
+        debugId: 'Flag Fetching',
+        initialData: {
+            count: 0,
+            results: []
+        }
+    });
+```
+
+**Example 2: using a `contract`**
+```javascript
+const contract = ({endpoint, endpointParams, options}: ContractArgs) => {
+    if (endpoint) {
+        const url = prepareUrl(endpoint, endpointParams);
+        return fetch(url, options).then(response => response.json());
+    }
+
+    return new Promise((resolve, reject) => {
+        reject('The contract/endpoint in not valid!');
+    });
+};
+
+const [data, setData, isLoading] = useData({
+        contract,
+        endpoint,
+        endpointParams,
+        debugId: 'Aborted Fetching',
+        initialData: {
+            count: 0,
+            results: []
+        }
+    });
+```
+
 ## Getting Started
 
 First, run the development server:
